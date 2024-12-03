@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -8,6 +9,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "@/utils/firebaseConfig";
 
 const CreateAccount = () => {
   const [name, setName] = useState("");
@@ -19,7 +22,7 @@ const CreateAccount = () => {
 
   const router = useRouter();
 
-  const handleCreateAccount = () => {
+  const handleCreateAccount = async () => {
     // Reset previous errors
     setNameError("");
     setEmailError("");
@@ -50,10 +53,24 @@ const CreateAccount = () => {
       !emailError &&
       !passwordError
     ) {
-      console.log("Account creation attempted with:", name, email, password);
-      // Implement account creation logic here
-      // On success, redirect to login page
-      router.push("/(auth)/login");
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        await updateProfile(userCredential.user, { displayName: name });
+        console.log("Account created successfully");
+        Alert.alert("Success", "Account created successfully", [
+          { text: "OK", onPress: () => router.push("/(auth)/login") },
+        ]);
+      } catch (error) {
+        console.error(error);
+        Alert.alert(
+          "Sign Up Failed",
+          "An error occurred while creating your account"
+        );
+      }
     }
   };
 

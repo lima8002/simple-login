@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -8,6 +9,8 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/utils/firebaseConfig";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +18,7 @@ const LogIn = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Reset previous errors
     setEmailError("");
     setPasswordError("");
@@ -34,8 +37,17 @@ const LogIn = () => {
     }
 
     if (email && password && !emailError && !passwordError) {
-      console.log("Login attempted with:", email, password);
-      // This will redirect to the main page
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log("Login successful");
+        router.replace("/home"); // Navigate to the main page after successful login
+      } catch (error) {
+        console.error(error);
+        Alert.alert(
+          "Login Failed",
+          "Invalid email or password. Please try again."
+        );
+      }
     }
   };
 
