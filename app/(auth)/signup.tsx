@@ -1,4 +1,3 @@
-import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -8,19 +7,29 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useRouter } from "expo-router";
 
-const LogIn = () => {
+const CreateAccount = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const handleLogin = () => {
+  const router = useRouter();
+
+  const handleCreateAccount = () => {
     // Reset previous errors
+    setNameError("");
     setEmailError("");
     setPasswordError("");
 
     // Simple validation
+    if (!name) {
+      setNameError("Name is required");
+    }
+
     if (!email) {
       setEmailError("Email is required");
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -33,9 +42,18 @@ const LogIn = () => {
       setPasswordError("Password must be at least 6 characters");
     }
 
-    if (email && password && !emailError && !passwordError) {
-      console.log("Login attempted with:", email, password);
-      // This will redirect to the main page
+    if (
+      name &&
+      email &&
+      password &&
+      !nameError &&
+      !emailError &&
+      !passwordError
+    ) {
+      console.log("Account creation attempted with:", name, email, password);
+      // Implement account creation logic here
+      // On success, redirect to login page
+      router.push("/(auth)/login");
     }
   };
 
@@ -47,8 +65,19 @@ const LogIn = () => {
           source={require("../../assets/images/sl-logo-circle.png")}
         />
       </View>
-      <Text style={styles.title}>Log In</Text>
+      <Text style={styles.title}>Create Account</Text>
       <View style={styles.inputContainer}>
+        <TextInput
+          style={[styles.input, nameError ? styles.inputError : null]}
+          placeholder="Name"
+          value={name}
+          onChangeText={(text) => {
+            setName(text);
+            setNameError("");
+          }}
+          autoCapitalize="words"
+        />
+        {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
         <TextInput
           style={[styles.input, emailError ? styles.inputError : null]}
           placeholder="Email"
@@ -76,21 +105,18 @@ const LogIn = () => {
         ) : null}
       </View>
       <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.btnStyle} onPress={handleLogin}>
-          <Text style={styles.btnText}>Log In</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
-          <Text style={styles.createAccountLink}>
-            Don't have an account? Create one
-          </Text>
+        <TouchableOpacity style={styles.btnStyle} onPress={handleCreateAccount}>
+          <Text style={styles.btnText}>Create Account</Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity onPress={() => router.back()}>
+        <Text style={styles.loginLink}>Already have an account? Log in</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default LogIn;
+export default CreateAccount;
 
 const styles = StyleSheet.create({
   container: {
@@ -155,7 +181,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     color: "#000",
   },
-  createAccountLink: {
+  loginLink: {
     textAlign: "center",
     marginTop: 20,
     color: "#A9A9A9",
