@@ -1,7 +1,14 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import { useRouter } from "expo-router";
 
-const index = () => {
+const StartPage = () => {
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    router.push("/(auth)/login");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -20,7 +27,7 @@ const index = () => {
         </Text>
       </View>
       <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.btnStyle}>
+        <TouchableOpacity style={styles.btnStyle} onPress={handleGetStarted}>
           <Text style={styles.btnText}>Let's get started</Text>
         </TouchableOpacity>
       </View>
@@ -28,7 +35,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default StartPage;
 
 const styles = StyleSheet.create({
   container: {
