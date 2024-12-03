@@ -62,7 +62,7 @@ const CreateAccount = () => {
         await updateProfile(userCredential.user, { displayName: name });
         console.log("Account created successfully");
         Alert.alert("Success", "Account created successfully", [
-          { text: "OK", onPress: () => router.push("/(auth)/login") },
+          { text: "OK" },
         ]);
       } catch (error) {
         console.error(error);
