@@ -1,4 +1,4 @@
-# Welcome to your Expo app 👋
+# Welcome to your Simple Login App using Expo 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -27,7 +27,7 @@ You can start developing by editing the files inside the **app** directory. This
 
 # Firebase Configuration
 
-This directory contains the Firebase configuration for the Simple Login App.
+This directory contains the Firebase configuration for the Simple Login App. After you create a Firebase project, you'll need to replace the values in `firebaseConfig.js` with your own and save on a folder called `utils`.
 
 ## firebaseConfig.js
 
